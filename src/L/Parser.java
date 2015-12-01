@@ -16,7 +16,7 @@ public final class Parser {
     if (outerPlus > 0) {
       Expression left = parseExpression(source.substring(0, outerPlus));
       Expression right = parseExpression(source.substring(outerPlus + 1));
-      return new SumExpression(left, right);
+      return SumExpression.of(left, right);
     }
 
     if (source.startsWith("(") && source.endsWith(")")) {
@@ -24,9 +24,18 @@ public final class Parser {
     }
 
     if (Character.isDigit(source.charAt(0))) {
-      return ConstantExpression.of(source);
+      int value;
+      try {
+        value = Integer.valueOf(source);
+      } catch (NumberFormatException e) {
+        throw new ParseException("Wrong number format for: " + source, e);
+      }
+      return ConstantExpression.of(value);
     }
 
+    if (!source.matches("\\w+")) {
+      throw new ParseException("Invalid variable name: " + source);
+    }
     return VariableExpression.of(source);
   }
 

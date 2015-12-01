@@ -1,7 +1,5 @@
 package L.ast;
 
-import L.ParseException;
-
 import java.util.Map;
 
 public class VariableExpression extends Expression {
@@ -13,9 +11,6 @@ public class VariableExpression extends Expression {
   }
 
   public static VariableExpression of(String s) {
-    if (!s.matches("\\w+")) {
-      throw new ParseException("Invalid variable name: " + s);
-    }
     return new VariableExpression(s);
   }
 
