@@ -24,20 +24,29 @@ public final class Parser {
     }
 
     if (Character.isDigit(source.charAt(0))) {
-      int value;
-      try {
-        value = Integer.valueOf(source);
-      } catch (NumberFormatException e) {
-        throw new ParseException("Wrong number format for: " + source, e);
-      }
-      return ConstantExpression.of(value);
+      return parseConstExpression(source);
     }
 
+    return parseVariableExpression(source);
+  }
+
+  private static Expression parseVariableExpression(String source) {
     if (!source.matches("\\w+")) {
       throw new ParseException("Invalid variable name: " + source);
     }
     return VariableExpression.of(source);
   }
+
+  private static Expression parseConstExpression(String source) {
+    int value;
+    try {
+      value = Integer.valueOf(source);
+    } catch (NumberFormatException e) {
+      throw new ParseException("Wrong number format for: " + source, e);
+    }
+    return ConstantExpression.of(value);
+  }
+
 
   private static int findOuterPlus(String s) {
     int scopeCounter = 0;
