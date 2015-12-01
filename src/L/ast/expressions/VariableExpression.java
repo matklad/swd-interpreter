@@ -1,4 +1,4 @@
-package L.ast;
+package L.ast.expressions;
 
 import java.util.Map;
 
@@ -6,12 +6,8 @@ public class VariableExpression extends Expression {
 
   private final String name;
 
-  private VariableExpression(String name) {
+  public VariableExpression(String name) {
     this.name = name;
-  }
-
-  public static VariableExpression of(String s) {
-    return new VariableExpression(s);
   }
 
   @Override

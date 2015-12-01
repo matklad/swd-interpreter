@@ -1,4 +1,4 @@
-package L.ast;
+package L.ast.expressions;
 
 import java.util.Map;
 

@@ -1,6 +1,6 @@
 import L.ParseException;
 import L.Parser;
-import L.ast.Expression;
+import L.ast.expressions.Expression;
 import org.junit.Test;
 
 import java.util.Collections;

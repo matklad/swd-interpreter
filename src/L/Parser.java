@@ -1,9 +1,9 @@
 package L;
 
-import L.ast.ConstantExpression;
-import L.ast.Expression;
-import L.ast.SumExpression;
-import L.ast.VariableExpression;
+import L.ast.expressions.ConstantExpression;
+import L.ast.expressions.Expression;
+import L.ast.expressions.SumExpression;
+import L.ast.expressions.VariableExpression;
 
 public final class Parser {
   private Parser() {
@@ -16,7 +16,7 @@ public final class Parser {
     if (outerPlus > 0) {
       Expression left = parseExpression(source.substring(0, outerPlus));
       Expression right = parseExpression(source.substring(outerPlus + 1));
-      return SumExpression.of(left, right);
+      return new SumExpression(left, right);
     }
 
     if (source.startsWith("(") && source.endsWith(")")) {
@@ -34,7 +34,7 @@ public final class Parser {
     if (!source.matches("\\w+")) {
       throw new ParseException("Invalid variable name: " + source);
     }
-    return VariableExpression.of(source);
+    return new VariableExpression(source);
   }
 
   private static Expression parseConstExpression(String source) {
@@ -44,7 +44,7 @@ public final class Parser {
     } catch (NumberFormatException e) {
       throw new ParseException("Wrong number format for: " + source, e);
     }
-    return ConstantExpression.of(value);
+    return new ConstantExpression(value);
   }
 
 
