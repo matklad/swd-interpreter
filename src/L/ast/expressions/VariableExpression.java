@@ -1,5 +1,7 @@
 package L.ast.expressions;
 
+import L.EvaluationException;
+
 import java.util.Map;
 
 public class VariableExpression extends Expression {
@@ -12,6 +14,10 @@ public class VariableExpression extends Expression {
 
   @Override
   public int evaluateIn(Map<String, Integer> environment) {
-    return environment.get(name);
+    Integer value = environment.get(name);
+    if (value == null) {
+      throw new EvaluationException("Variable unbound: " + name);
+    }
+    return value;
   }
 }

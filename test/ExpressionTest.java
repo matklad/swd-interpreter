@@ -1,3 +1,4 @@
+import L.EvaluationException;
 import L.ParseException;
 import L.Parser;
 import L.ast.expressions.Expression;
@@ -8,7 +9,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class ArithmeticTest {
+public class ExpressionTest {
   @Test
   public void testEvalConst() throws Exception {
     Expression expression = Parser.parseExpression("92");
@@ -73,6 +74,11 @@ public class ArithmeticTest {
     Map<String, Integer> environment = Collections.singletonMap("x", 92);
     Expression expression = Parser.parseExpression("x");
     assertEquals(92, expression.evaluate(environment));
+  }
 
+  @Test(expected = EvaluationException.class)
+  public void testUnboundVariable() throws Exception {
+    Expression expression = Parser.parseExpression("x");
+    assertEquals(92, expression.evaluate(Collections.emptyMap()));
   }
 }
