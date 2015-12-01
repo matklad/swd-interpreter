@@ -12,7 +12,7 @@ public final class AssignmentStatement extends Statement {
   }
 
   @Override
-  public void accept(Statement.Visitor visitor) {
-    visitor.visitAssignmentStatement(this);
+  public <T> T accept(Statement.Visitor<T> visitor) {
+    return visitor.visitAssignmentStatement(this);
   }
 }

@@ -7,17 +7,17 @@ import java.util.Collections;
 import java.util.List;
 
 public final class Program {
-  private List<Statement> statements;
+  public final List<Statement> statements;
 
   public Program(List<Statement> statements) {
       this.statements = Collections.unmodifiableList(new ArrayList<>(statements));
   }
 
   public void accept(Program.Visitor visitor) {
-    visitor.visitProgram(statements);
+    visitor.visitProgram(this);
   }
 
   public interface Visitor<T> {
-    T visitProgram(List<Statement> statements);
+    T visitProgram(Program program);
   }
 }

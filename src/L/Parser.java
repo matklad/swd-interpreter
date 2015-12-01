@@ -164,6 +164,7 @@ public final class Parser {
   static private List<Line> preprocess(String source) {
     String[] lines = source.split(System.lineSeparator());
     return Arrays.stream(lines)
+        .filter((line) -> line.trim().length() > 0)
         .map(Parser::preprocessLine)
         .collect(Collectors.toList());
   }

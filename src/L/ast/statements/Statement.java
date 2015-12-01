@@ -5,7 +5,7 @@ public abstract class Statement {
   Statement() {
   }
 
-  public abstract void accept(Visitor visitor);
+  public abstract <T> T accept(Visitor<T> visitor);
 
   public interface Visitor<T> {
     T visitAssignmentStatement(AssignmentStatement statement);

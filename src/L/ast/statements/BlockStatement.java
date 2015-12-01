@@ -12,7 +12,7 @@ public class BlockStatement extends Statement {
   }
 
   @Override
-  public void accept(Visitor visitor) {
-    visitor.visitBlockStatement(this);
+  public <T> T accept(Visitor<T> visitor) {
+    return visitor.visitBlockStatement(this);
   }
 }

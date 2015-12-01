@@ -90,8 +90,8 @@ public final class Evaluator {
     }
 
     @Override
-    public Void visitProgram(List<Statement> statements) {
-      statements.forEach((s) -> s.accept(this));
+    public Void visitProgram(Program program) {
+      program.statements.forEach((s) -> s.accept(this));
       return null;
     }
 
