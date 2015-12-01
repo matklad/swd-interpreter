@@ -1,12 +1,31 @@
 package L;
 
+import L.ast.Program;
 import L.ast.expressions.ConstantExpression;
 import L.ast.expressions.Expression;
 import L.ast.expressions.SumExpression;
 import L.ast.expressions.VariableExpression;
+import L.ast.statements.AssignmentStatement;
+import L.ast.statements.ExpressionStatement;
+import L.ast.statements.Statement;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public final class Parser {
   private Parser() {
+  }
+
+  public static Program parseProgram(String source) throws ParseException {
+    String[] lines = source.split(System.lineSeparator());
+    List<Statement> statements = Arrays.stream(lines)
+        .map(Parser::parseStatement)
+        .collect(Collectors.toList());
+
+    return new Program(statements);
   }
 
   public static Expression parseExpression(String source) throws ParseException {
@@ -28,6 +47,19 @@ public final class Parser {
     }
 
     return parseVariableExpression(source);
+  }
+
+  private static Statement parseStatement(String source) {
+    // can be made static, but lets not optimize prematurely
+    Pattern re = Pattern.compile("var\\s+(\\w+)\\s*=\\s*(.*)");
+    Matcher match = re.matcher(source);
+    if (match.matches()) {
+      String variable = match.group(1);
+      Expression expression = parseExpression(match.group(2));
+      return new AssignmentStatement(variable, expression);
+    }
+
+    return new ExpressionStatement(parseExpression(source));
   }
 
   private static Expression parseVariableExpression(String source) {
