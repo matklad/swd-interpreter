@@ -10,7 +10,10 @@ import L.ast.statements.BlockStatement;
 import L.ast.statements.ExpressionStatement;
 import L.ast.statements.Statement;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -30,13 +33,13 @@ public final class Parser {
         this.statements = new ArrayList<>();
       }
     }
-    List<Line> lines = preprocess(source);
+    List<Line> lines = processIndents(source);
 
     ArrayDeque<PreBlock> blocks = new ArrayDeque<>();
     blocks.add(new PreBlock(0));
-    PreBlock prevBlock = null;
+
     for (Line line : lines) {
-      prevBlock = blocks.peek();
+      PreBlock prevBlock = blocks.peek();
       Statement statement = parseStatement(line.contents);
 
       if (prevBlock.indent < line.indent) {
@@ -57,9 +60,7 @@ public final class Parser {
       }
     }
 
-    if (prevBlock == null) {
-      return new Program(Collections.emptyList());
-    }
+    PreBlock prevBlock = blocks.peek();
 
     while (blocks.size() > 1) {
       BlockStatement blockStatement = new BlockStatement(prevBlock.statements);
@@ -151,7 +152,7 @@ public final class Parser {
     }
   }
 
-  static private Line preprocessLine(String line) {
+  static private Line processLine(String line) {
     int i = 0;
     for (; i < line.length(); i++) {
       if (line.charAt(i) != ' ') {
@@ -161,11 +162,11 @@ public final class Parser {
     return new Line(i, line.trim());
   }
 
-  static private List<Line> preprocess(String source) {
+  static private List<Line> processIndents(String source) {
     String[] lines = source.split(System.lineSeparator());
     return Arrays.stream(lines)
         .filter((line) -> line.trim().length() > 0)
-        .map(Parser::preprocessLine)
+        .map(Parser::processLine)
         .collect(Collectors.toList());
   }
 }
