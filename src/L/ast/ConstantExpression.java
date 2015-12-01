@@ -1,3 +1,7 @@
+package L.ast;
+
+import L.ParseException;
+
 public class ConstantExpression extends Expression {
   private final int value;
 
@@ -6,7 +10,7 @@ public class ConstantExpression extends Expression {
   }
 
   @Override
-  int evaluate() {
+  public int evaluate() {
     return value;
   }
 

@@ -1,3 +1,5 @@
+package L.ast;
+
 public class SumExpression extends Expression {
   private final Expression left;
   private final Expression right;
@@ -8,7 +10,7 @@ public class SumExpression extends Expression {
   }
 
   @Override
-  int evaluate() {
+  public int evaluate() {
     return left.evaluate() + right.evaluate();
   }
 }

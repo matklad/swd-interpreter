@@ -18,17 +18,17 @@ Expression grammar is defined the following way:
         var a = x + 12
 
 Updated grammar:
-        
+
         Expr -> Const | Var | (Expr) | Expr + Expr
         Var -> \w+
-        Assign -> var Var = Expr 
+        Assign -> var Var = Expr
         Stmt = Expr | Assign
-        
-        
+
+
 3. Support scoping
 ------------------
 
-        var x = 2 + 6 // x == 8 
+        var x = 2 + 6 // x == 8
             var y = x + 8 // new scope, y == 16
             var x = 0 // local scoped x
             var q = x + 7 // q == 7
