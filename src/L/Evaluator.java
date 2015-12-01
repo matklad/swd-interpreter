@@ -17,7 +17,7 @@ public final class Evaluator {
   private Evaluator() {
   }
 
-  public static int evaluate(Map<String, Integer> environment, Expression expression) throws EvaluationException {
+  public static int evaluate(Expression expression, Map<String, Integer> environment) throws EvaluationException {
     class EvalVisitor implements Expression.Visitor<Integer> {
       @Override
       public Integer visitConstantExpression(ConstantExpression expression) {
@@ -56,14 +56,14 @@ public final class Evaluator {
 
       @Override
       public Void visitAssignmentStatement(AssignmentStatement statement) {
-        int init = statement.initializer.evaluate(environment);
+        int init = evaluate(statement.initializer, environment);
         environment.put(statement.variable, init);
         return null;
       }
 
       @Override
       public Void visitExpressionStatement(ExpressionStatement statement) {
-        statement.expression.evaluate(environment);
+        evaluate(statement.expression, environment);
         return null;
       }
 

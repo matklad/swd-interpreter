@@ -1,4 +1,5 @@
 import L.EvaluationException;
+import L.Evaluator;
 import L.ParseException;
 import L.Parser;
 import L.ast.expressions.Expression;
@@ -10,25 +11,29 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 public class ExpressionTest {
+  private int evaluateExpression(String source) {
+    Expression expression = Parser.parseExpression(source);
+    return Evaluator.evaluate(expression, Collections.emptyMap());
+  }
+
+  private int evaluateExpression(String source, Map<String, Integer> environment) {
+    Expression expression = Parser.parseExpression(source);
+    return Evaluator.evaluate(expression, environment);
+  }
+
   @Test
   public void testEvalConst() throws Exception {
-    Expression expression = Parser.parseExpression("92");
-    int actual = expression.evaluate();
-    assertEquals(92, actual);
+    assertEquals(92, evaluateExpression("92"));
   }
 
   @Test
   public void testEvalOtherConst() throws Exception {
-    Expression expression = Parser.parseExpression("4");
-    int actual = expression.evaluate();
-    assertEquals(4, actual);
+    assertEquals(4, evaluateExpression("4"));
   }
 
   @Test
   public void testScopeInteger() throws Exception {
-    Expression expression = Parser.parseExpression("(42)");
-    int actual = expression.evaluate();
-    assertEquals(42, actual);
+    assertEquals(42, evaluateExpression("(42)"));
   }
 
   @Test(expected = ParseException.class)
@@ -38,30 +43,22 @@ public class ExpressionTest {
 
   @Test
   public void testSum() throws Exception {
-    Expression expression = Parser.parseExpression("2+2");
-    int actual = expression.evaluate();
-    assertEquals(4, actual);
+    assertEquals(4, evaluateExpression("2+2"));
   }
 
   @Test
   public void testSpacedExpression() throws Exception {
-    Expression expression = Parser.parseExpression("(2 + 2)");
-    int actual = expression.evaluate();
-    assertEquals(4, actual);
+    assertEquals(4, evaluateExpression("2 + 2"));
   }
 
   @Test
   public void testSumWithParenthesis() throws Exception {
-    Expression expression = Parser.parseExpression("2+(2 + 2)");
-    int actual = expression.evaluate();
-    assertEquals(6, actual);
+    assertEquals(6, evaluateExpression("2+(2 + 2)"));
   }
 
   @Test
   public void testComplicatedExpression() throws Exception {
-    Expression expression = Parser.parseExpression("((2)+(2 + 2))");
-    int actual = expression.evaluate();
-    assertEquals(6, actual);
+    assertEquals(6, evaluateExpression("((2)+(2 + 2))"));
   }
 
   @Test
@@ -72,13 +69,11 @@ public class ExpressionTest {
   @Test
   public void testEvaluateInEnvironment() throws Exception {
     Map<String, Integer> environment = Collections.singletonMap("x", 92);
-    Expression expression = Parser.parseExpression("x");
-    assertEquals(92, expression.evaluate(environment));
+    assertEquals(92, evaluateExpression("x", environment));
   }
 
   @Test(expected = EvaluationException.class)
   public void testUnboundVariable() throws Exception {
-    Expression expression = Parser.parseExpression("x");
-    assertEquals(92, expression.evaluate(Collections.emptyMap()));
+    assertEquals(92, evaluateExpression("x", Collections.emptyMap()));
   }
 }

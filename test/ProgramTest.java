@@ -1,4 +1,5 @@
 import L.EvaluationException;
+import L.Evaluator;
 import L.Parser;
 import L.ast.Program;
 import org.junit.Test;
@@ -12,7 +13,7 @@ public class ProgramTest {
   private Map<String, Integer> evaluateProgram(String... lines) {
     String source = String.join("\n", lines);
     Program program = Parser.parseProgram(source);
-    return program.evaluate();
+    return Evaluator.evaluate(program);
   }
 
   @Test
