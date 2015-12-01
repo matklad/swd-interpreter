@@ -1,17 +1,17 @@
 import java.util.Map;
 
 public abstract class Expression {
-  public static Expression of(String s) {
+  public static Expression parse(String s) {
     s = s.trim();
     int outerPlus = findOuterPlus(s);
     if (outerPlus > 0) {
       return new SumExpression(
-          Expression.of(s.substring(0, outerPlus)),
-          Expression.of(s.substring(outerPlus + 1)));
+          Expression.parse(s.substring(0, outerPlus)),
+          Expression.parse(s.substring(outerPlus + 1)));
     }
 
     if (s.startsWith("(") && s.endsWith(")")) {
-      return Expression.of(s.substring(1, s.length() - 1));
+      return Expression.parse(s.substring(1, s.length() - 1));
     }
 
     if (Character.isDigit(s.charAt(0))) {
