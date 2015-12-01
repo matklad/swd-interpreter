@@ -11,7 +11,7 @@ public class VariableExpression extends Expression {
   }
 
   @Override
-  public int evaluate(Map<String, Integer> environment) {
+  public int evaluateIn(Map<String, Integer> environment) {
     return environment.get(name);
   }
 }

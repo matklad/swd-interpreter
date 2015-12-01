@@ -10,7 +10,7 @@ public class ConstantExpression extends Expression {
   }
 
   @Override
-  public int evaluate(Map<String, Integer> environment) {
+  public int evaluateIn(Map<String, Integer> environment) {
     return value;
   }
 }
