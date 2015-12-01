@@ -92,4 +92,8 @@ public class ProgramTest {
     );
   }
 
+  @Test
+  public void testStartingNesting() throws Exception {
+    checkTrace("    var x = 1", "x == 1");
+  }
 }
