@@ -1,5 +1,7 @@
 package L.ast.expressions;
 
+import java.util.Map;
+
 public class ConstantExpression extends Expression {
   private final int value;
 
@@ -8,7 +10,7 @@ public class ConstantExpression extends Expression {
   }
 
   @Override
-  public int evaluate() {
+  public int evaluate(Map<String, Integer> environment) {
     return value;
   }
 }

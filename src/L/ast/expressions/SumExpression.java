@@ -1,5 +1,7 @@
 package L.ast.expressions;
 
+import java.util.Map;
+
 public class SumExpression extends Expression {
   private final Expression left;
   private final Expression right;
@@ -10,7 +12,7 @@ public class SumExpression extends Expression {
   }
 
   @Override
-  public int evaluate() {
-    return left.evaluate() + right.evaluate();
+  public int evaluate(Map<String, Integer> environment) {
+    return left.evaluate(environment) + right.evaluate(environment);
   }
 }
