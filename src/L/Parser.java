@@ -6,11 +6,11 @@ import L.ast.expressions.Expression;
 import L.ast.expressions.SumExpression;
 import L.ast.expressions.VariableExpression;
 import L.ast.statements.AssignmentStatement;
+import L.ast.statements.BlockStatement;
 import L.ast.statements.ExpressionStatement;
 import L.ast.statements.Statement;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -19,13 +19,55 @@ public final class Parser {
   private Parser() {
   }
 
-  public static Program parseProgram(String source) throws ParseException {
-    String[] lines = source.split(System.lineSeparator());
-    List<Statement> statements = Arrays.stream(lines)
-        .map(Parser::parseStatement)
-        .collect(Collectors.toList());
 
-    return new Program(statements);
+  public static Program parseProgram(String source) throws ParseException {
+    class PreBlock {
+      final int indent;
+      final List<Statement> statements;
+
+      PreBlock(int indent) {
+        this.indent = indent;
+        this.statements = new ArrayList<>();
+      }
+    }
+    List<Line> lines = preprocess(source);
+
+    ArrayDeque<PreBlock> blocks = new ArrayDeque<>();
+    blocks.add(new PreBlock(0));
+    PreBlock prevBlock = null;
+    for (Line line : lines) {
+      prevBlock = blocks.peek();
+      Statement statement = parseStatement(line.contents);
+
+      if (prevBlock.indent < line.indent) {
+        PreBlock newBlock = new PreBlock(line.indent);
+        newBlock.statements.add(statement);
+        blocks.push(newBlock);
+      } else {
+        while (true) {
+          if (prevBlock.indent == line.indent) {
+            prevBlock.statements.add(statement);
+            break;
+          }
+          BlockStatement blockStatement = new BlockStatement(prevBlock.statements);
+          blocks.pop();
+          prevBlock = blocks.peek();
+          prevBlock.statements.add(blockStatement);
+        }
+      }
+    }
+
+    if (prevBlock == null) {
+      return new Program(Collections.emptyList());
+    }
+
+    while (blocks.size() > 1) {
+      BlockStatement blockStatement = new BlockStatement(prevBlock.statements);
+      blocks.pop();
+      prevBlock = blocks.peek();
+      prevBlock.statements.add(blockStatement);
+    }
+    return new Program(blocks.pop().statements);
   }
 
   public static Expression parseExpression(String source) throws ParseException {
@@ -99,4 +141,30 @@ public final class Parser {
     return -1;
   }
 
+  static private class Line {
+    final int indent;
+    final String contents;
+
+    public Line(int indent, String contents) {
+      this.indent = indent;
+      this.contents = contents;
+    }
+  }
+
+  static private Line preprocessLine(String line) {
+    int i = 0;
+    for (; i < line.length(); i++) {
+      if (line.charAt(i) != ' ') {
+        break;
+      }
+    }
+    return new Line(i, line.trim());
+  }
+
+  static private List<Line> preprocess(String source) {
+    String[] lines = source.split(System.lineSeparator());
+    return Arrays.stream(lines)
+        .map(Parser::preprocessLine)
+        .collect(Collectors.toList());
+  }
 }

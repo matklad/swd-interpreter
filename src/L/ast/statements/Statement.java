@@ -2,7 +2,8 @@ package L.ast.statements;
 
 public abstract class Statement {
   // protected constructor to ensure hierarchy is closed
-  Statement() { }
+  Statement() {
+  }
 
   public abstract void accept(Visitor visitor);
 
@@ -10,5 +11,7 @@ public abstract class Statement {
     T visitAssignmentStatement(AssignmentStatement statement);
 
     T visitExpressionStatement(ExpressionStatement statement);
+
+    T visitBlockStatement(BlockStatement statement);
   }
 }

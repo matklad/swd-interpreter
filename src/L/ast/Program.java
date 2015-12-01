@@ -2,6 +2,7 @@ package L.ast;
 
 import L.ast.statements.Statement;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,14 +10,14 @@ public final class Program {
   private List<Statement> statements;
 
   public Program(List<Statement> statements) {
-    this.statements = statements;
+      this.statements = Collections.unmodifiableList(new ArrayList<>(statements));
   }
 
   public void accept(Program.Visitor visitor) {
-    visitor.visitStatements(Collections.unmodifiableList(statements));
+    visitor.visitProgram(statements);
   }
 
   public interface Visitor<T> {
-    T visitStatements(List<Statement> statements);
+    T visitProgram(List<Statement> statements);
   }
 }
