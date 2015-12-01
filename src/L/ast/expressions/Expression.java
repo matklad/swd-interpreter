@@ -1,21 +1,31 @@
 package L.ast.expressions;
 
 import L.EvaluationException;
+import L.Evaluator;
 
 import java.util.Collections;
 import java.util.Map;
 
 public abstract class Expression {
+  // Ensure hierarchy is closed
+  protected Expression() {
+  }
 
   public final int evaluate() throws EvaluationException {
     return evaluate(Collections.emptyMap());
   }
 
   public final int evaluate(Map<String, Integer> environment) throws EvaluationException {
-    // Unfortunately java collections cannot enforce this constraint at compile time,
-    // so let's enforce it at run time.
-    return evaluateIn(Collections.unmodifiableMap(environment));
+    return Evaluator.evaluate(environment, this);
   }
 
-  protected abstract int evaluateIn(Map<String, Integer> environment);
+  public abstract <T> T accept(Visitor<T> visitor);
+
+  public interface Visitor<T> {
+    T visitConstantExpression(ConstantExpression expression);
+
+    T visitSumExpression(SumExpression expression);
+
+    T visitVariableExpression(VariableExpression expression);
+  }
 }

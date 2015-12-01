@@ -1,23 +1,16 @@
 package L.ast.expressions;
 
-import L.EvaluationException;
+public final class VariableExpression extends Expression {
 
-import java.util.Map;
-
-public class VariableExpression extends Expression {
-
-  private final String name;
+  public final String name;
 
   public VariableExpression(String name) {
     this.name = name;
   }
 
+
   @Override
-  public int evaluateIn(Map<String, Integer> environment) {
-    Integer value = environment.get(name);
-    if (value == null) {
-      throw new EvaluationException("Variable unbound: " + name);
-    }
-    return value;
+  public <T> T accept(Visitor<T> visitor) {
+    return visitor.visitVariableExpression(this);
   }
 }

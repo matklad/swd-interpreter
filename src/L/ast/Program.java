@@ -1,9 +1,12 @@
 package L.ast;
 
 import L.EvaluationException;
+import L.Evaluator;
+import L.ast.statements.AssignmentStatement;
+import L.ast.statements.ExpressionStatement;
 import L.ast.statements.Statement;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,11 +18,15 @@ public class Program {
     this.statements = statements;
   }
 
+  public void accept(Program.Visitor visitor) {
+    visitor.visitStatements(Collections.unmodifiableList(statements));
+  }
+
+  public interface Visitor<T> {
+    T visitStatements(List<Statement> statements);
+  }
+
   public Map<String, Integer> evaluate() throws EvaluationException {
-    HashMap<String, Integer> environment = new HashMap<>();
-    for (Statement statement : statements) {
-      statement.evaluate(environment);
-    }
-    return environment;
+    return Evaluator.evaluate(this);
   }
 }

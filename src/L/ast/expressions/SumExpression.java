@@ -1,10 +1,8 @@
 package L.ast.expressions;
 
-import java.util.Map;
-
-public class SumExpression extends Expression {
-  private final Expression left;
-  private final Expression right;
+public final class SumExpression extends Expression {
+  public final Expression left;
+  public final Expression right;
 
   public SumExpression(Expression left, Expression right) {
     this.left = left;
@@ -12,7 +10,7 @@ public class SumExpression extends Expression {
   }
 
   @Override
-  public int evaluateIn(Map<String, Integer> environment) {
-    return left.evaluate(environment) + right.evaluate(environment);
+  public <T> T accept(Visitor<T> visitor) {
+    return visitor.visitSumExpression(this);
   }
 }

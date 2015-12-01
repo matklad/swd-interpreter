@@ -34,7 +34,7 @@ Updated grammar:
             var q = x + 7 // q == 7
         var z = x + 1 //z == 9
 
-While interpreting, program should print every var value daclaration
+While interpreting, program should print every var value declaration
 
 4. Develop simple API to allow program static analysis 
 -------------------------------------------------------

@@ -2,11 +2,9 @@ package L.ast.statements;
 
 import L.ast.expressions.Expression;
 
-import java.util.Map;
-
-public class AssignmentStatement implements Statement {
-  private final String variable;
-  private final Expression initializer;
+public final class AssignmentStatement extends Statement {
+  public final String variable;
+  public final Expression initializer;
 
   public AssignmentStatement(String variable, Expression initializer) {
     this.variable = variable;
@@ -14,8 +12,7 @@ public class AssignmentStatement implements Statement {
   }
 
   @Override
-  public void evaluate(Map<String, Integer> environment) {
-    int value = initializer.evaluate(environment);
-    environment.put(variable, value);
+  public void accept(Statement.Visitor visitor) {
+    visitor.visitAssignmentStatement(this);
   }
 }

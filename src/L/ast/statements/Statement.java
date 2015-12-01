@@ -1,7 +1,14 @@
 package L.ast.statements;
 
-import java.util.Map;
+public abstract class Statement {
+  // protected constructor to ensure hierarchy is closed
+  Statement() { }
 
-public interface Statement {
-  void evaluate(Map<String, Integer> environment);
+  public abstract void accept(Visitor visitor);
+
+  public interface Visitor<T> {
+    T visitAssignmentStatement(AssignmentStatement statement);
+
+    T visitExpressionStatement(ExpressionStatement statement);
+  }
 }
